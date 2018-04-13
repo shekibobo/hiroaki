@@ -9,6 +9,7 @@ import okhttp3.logging.HttpLoggingInterceptor
 import okhttp3.mockwebserver.MockWebServer
 import okhttp3.mockwebserver.RecordedRequest
 import org.hamcrest.Matcher
+import retrofit2.CallAdapter
 import retrofit2.Converter
 import retrofit2.Retrofit
 
@@ -31,6 +32,21 @@ fun <T> MockWebServer.retrofitService(
     return Retrofit.Builder().baseUrl(this.url("/").toString())
             .client(okHttpClient)
             .addConverterFactory(converterFactory).build()
+            .create(serviceClass)
+}
+
+fun <T> MockWebServer.retrofitService(
+        serviceClass: Class<T>,
+        converterFactory: Converter.Factory,
+        adapterFactory: CallAdapter.Factory,
+        okHttpClient: OkHttpClient = okHttpClient()
+): T {
+    return Retrofit.Builder()
+            .baseUrl(this.url("/").toString())
+            .client(okHttpClient)
+            .addConverterFactory(converterFactory)
+            .addCallAdapterFactory(adapterFactory)
+            .build()
             .create(serviceClass)
 }
 
