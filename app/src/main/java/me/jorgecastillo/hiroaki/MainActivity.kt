@@ -6,6 +6,7 @@ import android.support.v7.widget.LinearLayoutManager
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
+import kotlinx.android.synthetic.main.activity_main.emptyView
 import kotlinx.android.synthetic.main.activity_main.loading
 import kotlinx.android.synthetic.main.activity_main.newsList
 import kotlinx.android.synthetic.main.activity_main.toolbar
@@ -40,6 +41,8 @@ class MainActivity : AppCompatActivity() {
             adapter.articles = articles
             adapter.notifyDataSetChanged()
             loading.visibility = View.GONE
+            newsList.visibility = if (articles.isEmpty()) View.GONE else View.VISIBLE
+            emptyView.visibility = if (articles.isEmpty()) View.VISIBLE else View.GONE
         }
     }
 

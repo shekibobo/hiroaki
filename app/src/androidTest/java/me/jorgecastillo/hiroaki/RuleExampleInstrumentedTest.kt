@@ -76,7 +76,7 @@ class RuleExampleInstrumentedTest {
 
         startActivity()
 
-        onView(withText(expectedNews()[0].title)).check(matches(not(isDisplayed())))
+        onView(withText("No news is good news!")).check(matches(isDisplayed()))
     }
 
     private fun expectedNews(): List<Article> {

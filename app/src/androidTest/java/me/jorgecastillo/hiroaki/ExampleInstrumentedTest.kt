@@ -15,9 +15,7 @@ import me.jorgecastillo.hiroaki.matchers.times
 import me.jorgecastillo.hiroaki.model.Article
 import me.jorgecastillo.hiroaki.model.Source
 import me.jorgecastillo.hiroaki.models.fileBody
-import me.jorgecastillo.hiroaki.models.inlineBody
 import me.jorgecastillo.hiroaki.models.success
-import org.hamcrest.CoreMatchers.not
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
@@ -28,7 +26,7 @@ import retrofit2.converter.moshi.MoshiConverterFactory
 @RunWith(AndroidJUnit4::class)
 class ExampleInstrumentedTest : AndroidMockServerSuite() {
 
-    @get:Rule val testRule: ActivityTestRule<MainActivity> = ActivityTestRule(
+    @Rule @JvmField val testRule: ActivityTestRule<MainActivity> = ActivityTestRule(
             MainActivity::class.java, true, false)
 
     @Before
@@ -65,7 +63,7 @@ class ExampleInstrumentedTest : AndroidMockServerSuite() {
 
         onView(withText(expectedNews()[0].title)).check(matches(isDisplayed()))
 
-        server.verify("v2/top-headlines").called(times = times(1), method = Method.GET)
+        server.verify("v2/top-headlines").called(times = times(1), method = GET)
     }
 
     @Test
@@ -75,7 +73,7 @@ class ExampleInstrumentedTest : AndroidMockServerSuite() {
 
         startActivity()
 
-        onView(withText(expectedNews()[0].title)).check(matches(not(isDisplayed())))
+        onView(withText("No news is good news!")).check(matches(isDisplayed()))
     }
 
     private fun expectedNews(): List<Article> {
