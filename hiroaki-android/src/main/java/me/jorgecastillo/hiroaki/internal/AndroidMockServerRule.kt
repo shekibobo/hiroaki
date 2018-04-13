@@ -1,7 +1,7 @@
 package me.jorgecastillo.hiroaki.internal
 
 import android.support.test.InstrumentationRegistry
-import me.jorgecastillo.hiroaki.dispatcher.AndroidDispatcherRetainer
+import me.jorgecastillo.hiroaki.dispatcher.DispatcherRetainer
 import okhttp3.mockwebserver.MockWebServer
 import org.junit.Before
 import org.junit.rules.ExternalResource
@@ -17,15 +17,18 @@ class AndroidMockServerRule : ExternalResource() {
     @Before
     override fun before() {
         server = MockWebServer()
-        AndroidDispatcherRetainer.androidContext = InstrumentationRegistry.getContext()
-        AndroidDispatcherRetainer.registerRetainer()
-        AndroidDispatcherRetainer.resetDispatchers()
+        val androidContext = InstrumentationRegistry.getContext()
+        DispatcherRetainer.fileContentAsStringOverride = { fileName ->
+            androidContext.resources.assets.open(fileName).bufferedReader().use { it.readText() }
+        }
+        DispatcherRetainer.registerRetainer()
+        DispatcherRetainer.resetDispatchers()
         server.start()
     }
 
     override fun after() {
         server.shutdown()
-        AndroidDispatcherRetainer.resetDispatchers()
-        server.setDispatcher(AndroidDispatcherRetainer.queueDispatcher)
+        DispatcherRetainer.resetDispatchers()
+        server.setDispatcher(DispatcherRetainer.queueDispatcher)
     }
 }
